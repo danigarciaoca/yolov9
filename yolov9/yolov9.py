@@ -72,11 +72,7 @@ class YOLOv9:
         pred = self.model(img, augment=augment, visualize=visualize)
 
         # NMS post-processing
-        pred = non_max_suppression(pred, conf_thres, iou_thres, classes, agnostic_nms, max_det=max_det)
-        # Rescale boxes to original image size
-        for det in pred:  # per image (batch cases)
-            if len(det):
-                det[:, :4] = scale_boxes(img_sz_p, det[:, :4], img_sz).round()
+        pred = self.postprocess(pred, img_sz_p, img_sz, classes, conf_thres, iou_thres, max_det, agnostic_nms)
 
         return pred
 
@@ -98,6 +94,27 @@ class YOLOv9:
         im = im[None]  # expand for batch dim
 
         return im
+
+    @staticmethod
+    def postprocess(pred,
+                    img_sz_p,
+                    img_sz,
+                    classes=None,  # filter by class: --class 0, or --class 0 2 3
+                    conf_thres=0.25,  # confidence threshold
+                    iou_thres=0.45,  # NMS IOU threshold
+                    max_det=1000,  # maximum detections per image
+                    agnostic_nms=False  # class-agnostic NMS
+                    ):
+        """ Processes YOLOv9 detection results, so they can be directly used. """
+        # Filter unwanted detections
+        pred = non_max_suppression(pred, conf_thres, iou_thres, classes, agnostic_nms, max_det=max_det)
+
+        # Rescale boxes to original image size
+        for det in pred:  # per image (batch cases)
+            if len(det):
+                det[:, :4] = scale_boxes(img_sz_p, det[:, :4], img_sz).round()
+
+        return pred
 
     def annotate(self,
                  img,  # image to annotate
