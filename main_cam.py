@@ -29,7 +29,7 @@ def main(det_model, video_source):
         fps = 1 / (time.time() - start)
         print(f"FPS: {fps}")
 
-        # annotate image with detections
+        # annotate frame with detections
         frame_out = model.annotate(frame, det, line_width=3)
 
         # Display the resulting frame
