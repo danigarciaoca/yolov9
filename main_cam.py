@@ -23,12 +23,13 @@ def main(det_model, video_source):
             print("Error: Could not read frame.")
             break
 
-        # run inference and draw detections
+        # run object detection
         start = time.time()
         det = det_model(frame, classes=None, conf_thres=0.25)[0]  # keep item 0 (single image inference)
         fps = 1 / (time.time() - start)
         print(f"FPS: {fps}")
 
+        # annotate image with detections
         frame_out = model.annotate(frame, det, line_width=3)
 
         # Display the resulting frame
