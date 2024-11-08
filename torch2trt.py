@@ -1,4 +1,4 @@
-from yolov9.export import run
+from yolov9 import run
 
 # Global options
 weights = "weights/yolov9-e-converted.pt"  # weights path
