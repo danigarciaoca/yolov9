@@ -46,7 +46,7 @@ def export_formats():
         ['TensorFlow Lite', 'tflite', '.tflite', True, False],
         ['TensorFlow Edge TPU', 'edgetpu', '_edgetpu.tflite', False, False],
         ['TensorFlow.js', 'tfjs', '_web_model', False, False],
-        ['PaddlePaddle', 'paddle', '_paddle_model', True, True], ]
+        ['PaddlePaddle', 'paddle', '_paddle_model', True, True],]
     return pd.DataFrame(x, columns=['Format', 'Argument', 'Suffix', 'CPU', 'GPU'])
 
 
@@ -138,11 +138,10 @@ def export_onnx(model, im, file, opset, dynamic, simplify, prefix=colorstr('ONNX
         except Exception as e:
             LOGGER.info(f'{prefix} simplifier failure: {e}')
     return f, model_onnx
-
+    
 
 @try_export
-def export_onnx_end2end(model, im, file, simplify, topk_all, iou_thres, conf_thres, device, labels,
-                        prefix=colorstr('ONNX END2END:')):
+def export_onnx_end2end(model, im, file, simplify, topk_all, iou_thres, conf_thres, device, labels, prefix=colorstr('ONNX END2END:')):
     # YOLO ONNX export
     check_requirements('onnx')
     import onnx
@@ -150,31 +149,31 @@ def export_onnx_end2end(model, im, file, simplify, topk_all, iou_thres, conf_thr
     f = os.path.splitext(file)[0] + "-end2end.onnx"
     batch_size = 'batch'
 
-    dynamic_axes = {'images': {0: 'batch', 2: 'height', 3: 'width'}, }  # variable length axes
+    dynamic_axes = {'images': {0 : 'batch', 2: 'height', 3:'width'}, } # variable length axes
 
     output_axes = {
-        'num_dets': {0: 'batch'},
-        'det_boxes': {0: 'batch'},
-        'det_scores': {0: 'batch'},
-        'det_classes': {0: 'batch'},
-    }
+                    'num_dets': {0: 'batch'},
+                    'det_boxes': {0: 'batch'},
+                    'det_scores': {0: 'batch'},
+                    'det_classes': {0: 'batch'},
+                }
     dynamic_axes.update(output_axes)
-    model = End2End(model, topk_all, iou_thres, conf_thres, None, device, labels)
+    model = End2End(model, topk_all, iou_thres, conf_thres, None ,device, labels)
 
     output_names = ['num_dets', 'det_boxes', 'det_scores', 'det_classes']
-    shapes = [batch_size, 1, batch_size, topk_all, 4,
-              batch_size, topk_all, batch_size, topk_all]
+    shapes = [ batch_size, 1,  batch_size,  topk_all, 4,
+               batch_size,  topk_all,  batch_size,  topk_all]
 
-    torch.onnx.export(model,
-                      im,
-                      f,
-                      verbose=False,
-                      export_params=True,  # store the trained parameter weights inside the model file
-                      opset_version=12,
-                      do_constant_folding=True,  # whether to execute constant folding for optimization
-                      input_names=['images'],
-                      output_names=output_names,
-                      dynamic_axes=dynamic_axes)
+    torch.onnx.export(model, 
+                          im, 
+                          f, 
+                          verbose=False, 
+                          export_params=True,       # store the trained parameter weights inside the model file
+                          opset_version=12, 
+                          do_constant_folding=True, # whether to execute constant folding for optimization
+                          input_names=['images'],
+                          output_names=output_names,
+                          dynamic_axes=dynamic_axes)
 
     # Checks
     model_onnx = onnx.load(f)  # load onnx model
@@ -194,7 +193,7 @@ def export_onnx_end2end(model, im, file, simplify, topk_all, iou_thres, conf_thr
             print(f'Simplifier failure: {e}')
 
         # print(onnx.helper.printable_graph(onnx_model.graph))  # print a human readable model
-        onnx.save(model_onnx, f)
+        onnx.save(model_onnx,f)
         print('ONNX export success, saved as %s' % f)
     return f, model_onnx
 
@@ -208,8 +207,8 @@ def export_openvino(file, metadata, half, prefix=colorstr('OpenVINO:')):
     LOGGER.info(f'\n{prefix} starting export with openvino {ie.__version__}...')
     f = str(file).replace('.pt', f'_openvino_model{os.sep}')
 
-    # cmd = f"mo --input_model {file.with_suffix('.onnx')} --output_dir {f} --data_type {'FP16' if half else 'FP32'}"
-    # cmd = f"mo --input_model {file.with_suffix('.onnx')} --output_dir {f} {"--compress_to_fp16" if half else ""}"
+    #cmd = f"mo --input_model {file.with_suffix('.onnx')} --output_dir {f} --data_type {'FP16' if half else 'FP32'}"
+    #cmd = f"mo --input_model {file.with_suffix('.onnx')} --output_dir {f} {"--compress_to_fp16" if half else ""}"
     half_arg = "--compress_to_fp16" if half else ""
     cmd = f"mo --input_model {file.with_suffix('.onnx')} --output_dir {f} {half_arg}"
     subprocess.run(cmd.split(), check=True, env=os.environ)  # export
@@ -256,8 +255,7 @@ def export_coreml(model, im, file, int8, half, prefix=colorstr('CoreML:')):
 
 
 @try_export
-def export_engine(model, im, file, opset, half, dynamic, simplify, workspace=4, verbose=False,
-                  prefix=colorstr('TensorRT:')):
+def export_engine(model, im, file, opset, half, dynamic, simplify, workspace=4, verbose=False, prefix=colorstr('TensorRT:')):
     # YOLO TensorRT export https://developer.nvidia.com/tensorrt
     assert im.device.type != 'cpu', 'export running on CPU but must be on GPU, i.e. `python export.py --device 0`'
     try:
@@ -465,9 +463,9 @@ def export_tfjs(file, prefix=colorstr('TensorFlow.js:')):
             r'"Identity.?.?": {"name": "Identity.?.?"}, '
             r'"Identity.?.?": {"name": "Identity.?.?"}, '
             r'"Identity.?.?": {"name": "Identity.?.?"}}}', r'{"outputs": {"Identity": {"name": "Identity"}, '
-                                                           r'"Identity_1": {"name": "Identity_1"}, '
-                                                           r'"Identity_2": {"name": "Identity_2"}, '
-                                                           r'"Identity_3": {"name": "Identity_3"}}}', json)
+            r'"Identity_1": {"name": "Identity_1"}, '
+            r'"Identity_2": {"name": "Identity_2"}, '
+            r'"Identity_3": {"name": "Identity_3"}}}', json)
         j.write(subst)
     return f, None
 
@@ -583,8 +581,7 @@ def run(
     if onnx_end2end:
         if isinstance(model, DetectionModel):
             labels = model.names
-            f[2], _ = export_onnx_end2end(model, im, file, simplify, topk_all, iou_thres, conf_thres, device,
-                                          len(labels))
+            f[2], _ = export_onnx_end2end(model, im, file, simplify, topk_all, iou_thres, conf_thres, device, len(labels))
         else:
             raise RuntimeError("The model is not a DetectionModel.")
     if xml:  # OpenVINO
@@ -659,8 +656,7 @@ def parse_opt():
     parser.add_argument('--nms', action='store_true', help='TF: add NMS to model')
     parser.add_argument('--agnostic-nms', action='store_true', help='TF: add agnostic NMS to model')
     parser.add_argument('--topk-per-class', type=int, default=100, help='TF.js NMS: topk per class to keep')
-    parser.add_argument('--topk-all', type=int, default=100,
-                        help='ONNX END2END/TF.js NMS: topk for all classes to keep')
+    parser.add_argument('--topk-all', type=int, default=100, help='ONNX END2END/TF.js NMS: topk for all classes to keep')
     parser.add_argument('--iou-thres', type=float, default=0.45, help='ONNX END2END/TF.js NMS: IoU threshold')
     parser.add_argument('--conf-thres', type=float, default=0.25, help='ONNX END2END/TF.js NMS: confidence threshold')
     parser.add_argument(
@@ -670,7 +666,7 @@ def parse_opt():
         help='torchscript, onnx, onnx_end2end, openvino, engine, coreml, saved_model, pb, tflite, edgetpu, tfjs, paddle')
     opt = parser.parse_args()
 
-    if 'onnx_end2end' in opt.include:
+    if 'onnx_end2end' in opt.include:  
         opt.simplify = True
         opt.dynamic = True
         opt.inplace = True
