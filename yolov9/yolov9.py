@@ -6,7 +6,9 @@ from models.common import DetectMultiBackend
 from utils.augmentations import letterbox
 from utils.general import check_img_size, non_max_suppression, scale_boxes
 from utils.plots import colors
-from utils.torch_utils import select_device
+from utils.torch_utils import select_device, smart_inference_mode
+
+torch.backends.cudnn.benchmark = True  # faster for fixed-size inference
 
 
 def box_label(im, box, label='', color=(128, 128, 128), lw=2, txt_color=(255, 255, 255)):
@@ -29,6 +31,7 @@ def box_label(im, box, label='', color=(128, 128, 128), lw=2, txt_color=(255, 25
 
 
 class YOLOv9:
+    @smart_inference_mode()
     def __init__(self,
                  weights='yolo.pt',  # model path or triton URL
                  data='data/coco.yaml',  # dataset.yaml path
@@ -52,6 +55,7 @@ class YOLOv9:
 
         self.model = model
 
+    @smart_inference_mode()
     def __call__(self,
                  img,  # image to process
                  classes=None,  # filter by class: --class 0, or --class 0 2 3
