@@ -102,6 +102,7 @@ class YOLOv9:
     def annotate(self,
                  img,  # image to annotate
                  det,  # detections used for annotation
+                 line_width=2,  # box line width
                  hide_labels=False,  # hide labels
                  hide_conf=False  # hide confidences
                  ):
@@ -109,7 +110,7 @@ class YOLOv9:
             # Draw bbox into the image
             c = int(cls)  # integer class
             label = None if hide_labels else (self.names[c] if hide_conf else f'{self.names[c]} {conf:.2f}')
-            box_label(img, xyxy, label, color=colors(c, True), lw=2)
+            box_label(img, xyxy, label, color=colors(c, True), lw=line_width)
 
         return img
 
@@ -129,7 +130,7 @@ if __name__ == "__main__":
     det = model(img, classes=None, conf_thres=0.25, max_det=1000)[0]  # no batch inference, so just keep item 0
 
     # annotate image with detections
-    img_out = model.annotate(img, det)
+    img_out = model.annotate(img, det, line_width=3)
 
     # show annotated image
     cv2.imshow('Annotated image', img_out)
