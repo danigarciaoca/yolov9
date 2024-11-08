@@ -138,7 +138,7 @@ def export_onnx(model, im, file, opset, dynamic, simplify, prefix=colorstr('ONNX
         except Exception as e:
             LOGGER.info(f'{prefix} simplifier failure: {e}')
     return f, model_onnx
-    
+
 
 @try_export
 def export_onnx_end2end(model, im, file, simplify, topk_all, iou_thres, conf_thres, device, labels, prefix=colorstr('ONNX END2END:')):
@@ -164,12 +164,12 @@ def export_onnx_end2end(model, im, file, simplify, topk_all, iou_thres, conf_thr
     shapes = [ batch_size, 1,  batch_size,  topk_all, 4,
                batch_size,  topk_all,  batch_size,  topk_all]
 
-    torch.onnx.export(model, 
-                          im, 
-                          f, 
-                          verbose=False, 
+    torch.onnx.export(model,
+                          im,
+                          f,
+                          verbose=False,
                           export_params=True,       # store the trained parameter weights inside the model file
-                          opset_version=12, 
+                          opset_version=12,
                           do_constant_folding=True, # whether to execute constant folding for optimization
                           input_names=['images'],
                           output_names=output_names,
@@ -255,7 +255,7 @@ def export_coreml(model, im, file, int8, half, prefix=colorstr('CoreML:')):
 
 
 @try_export
-def export_engine(model, im, file, half, dynamic, simplify, workspace=4, verbose=False, prefix=colorstr('TensorRT:')):
+def export_engine(model, im, file, opset, half, dynamic, simplify, workspace=4, verbose=False, prefix=colorstr('TensorRT:')):
     # YOLO TensorRT export https://developer.nvidia.com/tensorrt
     assert im.device.type != 'cpu', 'export running on CPU but must be on GPU, i.e. `python export.py --device 0`'
     try:
@@ -272,7 +272,7 @@ def export_engine(model, im, file, half, dynamic, simplify, workspace=4, verbose
         model.model[-1].anchor_grid = grid
     else:  # TensorRT >= 8
         check_version(trt.__version__, '8.0.0', hard=True)  # require tensorrt>=8.0.0
-        export_onnx(model, im, file, 12, dynamic, simplify)  # opset 12
+        export_onnx(model, im, file, opset, dynamic, simplify)  # opset 12
     onnx = file.with_suffix('.onnx')
 
     LOGGER.info(f'\n{prefix} starting export with TensorRT {trt.__version__}...')
@@ -575,7 +575,7 @@ def run(
     if jit:  # TorchScript
         f[0], _ = export_torchscript(model, im, file, optimize)
     if engine:  # TensorRT required before ONNX
-        f[1], _ = export_engine(model, im, file, half, dynamic, simplify, workspace, verbose)
+        f[1], _ = export_engine(model, im, file, opset, half, dynamic, simplify, workspace, verbose)
     if onnx or xml:  # OpenVINO requires ONNX
         f[2], _ = export_onnx(model, im, file, opset, dynamic, simplify)
     if onnx_end2end:
@@ -666,7 +666,7 @@ def parse_opt():
         help='torchscript, onnx, onnx_end2end, openvino, engine, coreml, saved_model, pb, tflite, edgetpu, tfjs, paddle')
     opt = parser.parse_args()
 
-    if 'onnx_end2end' in opt.include:  
+    if 'onnx_end2end' in opt.include:
         opt.simplify = True
         opt.dynamic = True
         opt.inplace = True
