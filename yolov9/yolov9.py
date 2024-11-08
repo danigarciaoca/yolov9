@@ -86,6 +86,6 @@ if __name__ == "__main__":
     model = YOLOv9(weights_path, half=False)
 
     # run object detection
-    det = model(img, classes=None, conf_thres=0.25, max_det=1000)[0]  # no batch inference, so keep item 0
+    det = model(img, classes=None, conf_thres=0.25, max_det=1000)[0]  # no batch inference, so just keep item 0
 
     print("Done!")
