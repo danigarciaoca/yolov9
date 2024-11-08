@@ -2,12 +2,12 @@ import cv2
 import numpy as np
 import torch
 
-from models.common import DetectMultiBackend
-from utils.augmentations import letterbox
-from utils.general import check_img_size, non_max_suppression, scale_boxes
-from utils.plots import colors
-from utils.torch_utils import select_device, smart_inference_mode
-from yolov9 import ROOT
+from .src import ROOT
+from .src.models.common import DetectMultiBackend
+from .src.utils.augmentations import letterbox
+from .src.utils.general import check_img_size, non_max_suppression, scale_boxes
+from .src.utils.plots import colors
+from .src.utils.torch_utils import select_device, smart_inference_mode
 
 torch.backends.cudnn.benchmark = True  # faster for fixed-size inference
 
