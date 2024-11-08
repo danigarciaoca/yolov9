@@ -166,3 +166,8 @@ cython_debug/
 *.pth
 *.onnx
 *.engine
+
+# Media files
+*.jpg
+*.png
+*.mp4
