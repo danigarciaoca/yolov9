@@ -7,6 +7,7 @@ from utils.augmentations import letterbox
 from utils.general import check_img_size, non_max_suppression, scale_boxes
 from utils.plots import colors
 from utils.torch_utils import select_device, smart_inference_mode
+from yolov9 import ROOT
 
 torch.backends.cudnn.benchmark = True  # faster for fixed-size inference
 
@@ -34,7 +35,7 @@ class YOLOv9:
     @smart_inference_mode()
     def __init__(self,
                  weights='yolo.pt',  # model path or triton URL
-                 data='data/coco.yaml',  # dataset.yaml path
+                 data=ROOT / 'data/coco.yaml',  # dataset.yaml path
                  imgsz=(640, 640),  # inference size (height, width)
                  device="cuda:0",  # cuda device, i.e. 0 or 0,1,2,3 or cpu
                  half=False,  # use FP16 half-precision inference
@@ -134,30 +135,3 @@ class YOLOv9:
             box_label(img, xyxy, label, color=colors(c, True), lw=line_width)
 
         return img
-
-
-if __name__ == "__main__":
-    # base paths
-    weights_path = "../weights/yolov9-e-converted.pt"  # model weights
-    img_path = "../img/04_2024-03-08_19-28-18-home_00041.jpg"  # input image
-
-    # load input image
-    img = cv2.imread(img_path)
-
-    # load model
-    model = YOLOv9(weights_path, half=False)
-
-    # run object detection
-    det = model(img, classes=None, conf_thres=0.25, max_det=1000)[0]  # no batch inference, so just keep item 0
-
-    # annotate image with detections
-    img_out = model.annotate(img, det, line_width=3)
-
-    # show annotated image
-    cv2.imshow('Annotated image', img_out)
-
-    # wait until a key is pressed, then close the window
-    cv2.waitKey(0)
-    cv2.destroyAllWindows()
-
-    print("Done!")

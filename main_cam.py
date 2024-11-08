@@ -2,7 +2,7 @@ import time
 
 import cv2
 
-from yolov9.yolov9 import YOLOv9
+from yolov9 import YOLOv9
 
 
 def main(det_model, video_source):
@@ -50,4 +50,7 @@ if __name__ == "__main__":
     weights_path = "weights/yolov9-e-converted.pt"  # model weights
     model = YOLOv9(weights_path, half=False)
 
+    # run inference on webcam stream
     main(det_model=model, video_source=0)
+
+    print("Done!")
