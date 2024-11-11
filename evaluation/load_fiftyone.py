@@ -6,7 +6,7 @@ data_path = "coco/test/images"  # directory containing the source images
 labels_path = "coco/test/instances.json"  # path to the COCO labels JSON file
 persist = False  # make the dataset persistent
 
-# fo.delete_dataset(dataset_name)
+fo.delete_dataset(dataset_name)
 
 if dataset_name in fo.list_datasets():
     # load dataset from database
@@ -18,6 +18,7 @@ else:
         dataset_type=fo.types.COCODetectionDataset,
         data_path=data_path,
         labels_path=labels_path,
+        label_types="detections",
         name=dataset_name,
         persistent=persist
     )
