@@ -24,6 +24,6 @@ else:
     print(f"Dataset '{dataset_name}' loaded from disk.")
 
 if __name__ == "__main__":
-    # Launch FiftyOne with the loaded script
+    # launch FiftyOne with the loaded dataset
     session = fo.launch_app(dataset)
     session.wait()  # block execution until the script is stopped
