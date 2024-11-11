@@ -172,4 +172,4 @@ cython_debug/
 *.png
 *.mp4
 
-evaluation/coco/
+evaluation/coco*/
