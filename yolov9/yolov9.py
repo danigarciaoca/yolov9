@@ -130,7 +130,8 @@ class YOLOv9:
                  hide_conf=False,  # hide confidences
                  save_txt=False,  # save results to *.txt
                  save_conf=False,  # save confidences in --save-txt labels
-                 txt_file=None  # name of the file in which to save results
+                 txt_file=None,  # name of the file in which to save results
+                 class_map=None  # dictionary containing the mapping from COCO class IDs to destination class IDs
                  ):
         # normalization gain -> W,H,W,H
         gn = torch.tensor(img.shape)[[1, 0, 1, 0]]
@@ -139,7 +140,8 @@ class YOLOv9:
             # write detections to file
             if save_txt:
                 xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()  # normalized xywh
-                line = (cls, *xywh, conf) if save_conf else (cls, *xywh)  # label format
+                cls_n = class_map[int(cls)] if class_map else cls
+                line = (cls_n, *xywh, conf) if save_conf else (cls_n, *xywh)  # label format
                 with open(f'{txt_file}.txt', 'a') as f:
                     f.write(('%g ' * len(line)).rstrip() % line + '\n')
 
