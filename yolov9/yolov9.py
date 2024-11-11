@@ -5,7 +5,7 @@ import torch
 from .src import ROOT
 from .src.models.common import DetectMultiBackend
 from .src.utils.augmentations import letterbox
-from .src.utils.general import check_img_size, non_max_suppression, scale_boxes
+from .src.utils.general import check_img_size, non_max_suppression, scale_boxes, xyxy2xywh
 from .src.utils.plots import colors
 from .src.utils.torch_utils import select_device, smart_inference_mode
 
@@ -124,14 +124,29 @@ class YOLOv9:
     def annotate(self,
                  img,  # image to annotate
                  det,  # detections used for annotation
+                 annot_img=True,  # annotate image with results
                  line_width=2,  # box line width
                  hide_labels=False,  # hide labels
-                 hide_conf=False  # hide confidences
+                 hide_conf=False,  # hide confidences
+                 save_txt=False,  # save results to *.txt
+                 save_conf=False,  # save confidences in --save-txt labels
+                 txt_file=None  # name of the file in which to save results
                  ):
+        # normalization gain -> W,H,W,H
+        gn = torch.tensor(img.shape)[[1, 0, 1, 0]]
+
         for *xyxy, conf, cls in reversed(det):
-            # Draw bbox into the image
-            c = int(cls)  # integer class
-            label = None if hide_labels else (self.names[c] if hide_conf else f'{self.names[c]} {conf:.2f}')
-            box_label(img, xyxy, label, color=colors(c, True), lw=line_width)
+            # write detections to file
+            if save_txt:
+                xywh = (xyxy2xywh(torch.tensor(xyxy).view(1, 4)) / gn).view(-1).tolist()  # normalized xywh
+                line = (cls, *xywh, conf) if save_conf else (cls, *xywh)  # label format
+                with open(f'{txt_file}.txt', 'a') as f:
+                    f.write(('%g ' * len(line)).rstrip() % line + '\n')
+
+            # annotate image with detections
+            if annot_img:
+                c = int(cls)  # integer class
+                label = None if hide_labels else (self.names[c] if hide_conf else f'{self.names[c]} {conf:.2f}')
+                box_label(img, xyxy, label, color=colors(c, True), lw=line_width)
 
         return img
