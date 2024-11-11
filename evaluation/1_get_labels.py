@@ -10,8 +10,8 @@ def process_image(det_model, in_img_path, out_labels_path, view_img):
     # load input image
     img = cv2.imread(in_img_path)
 
-    # run object detection
-    det = det_model(img, classes=None, conf_thres=0.25, max_det=1000)[0]  # no batch inference, so just keep item 0
+    # run object detection ([0, 15, 16] -> {0: 'person', 15: 'cat', 16: 'dog'})
+    det = det_model(img, classes=[0, 15, 16], conf_thres=0.25, max_det=1000)[0]  # single image, so just keep item 0
 
     # annotate image with detections
     txt_out = out_labels_path / in_img_path.stem
