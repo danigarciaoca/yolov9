@@ -35,7 +35,7 @@ if __name__ == "__main__":
     images_dir = Path("coco/test/images")  # folder containing input images to be processed
 
     # output predicted labels path (class + bbox)
-    labels_path = Path("coco_test_yolov9/labels")
+    labels_path = Path("coco_test_yolov9/labels/test")
     labels_path.mkdir(parents=True, exist_ok=True)
 
     # load model
