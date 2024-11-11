@@ -31,11 +31,12 @@ else:
     print(f"Dataset '{gt_dataset_name}' loaded from disk.")
 
 # add model predictions
+classes = dataset.distinct("ground_truth.detections.label")
 fouy.add_yolo_labels(
     dataset,
     "predictions",
     pred_labels_path,
-    classes=["cat", "dog", "person"]
+    classes
 )
 
 if __name__ == "__main__":
