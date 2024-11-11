@@ -14,3 +14,4 @@ dependencies:
             - --extra-index-url https://pypi.ngc.nvidia.com
             # Packages
             - -r requirements.txt
+            - fiftyone==1.0.2
