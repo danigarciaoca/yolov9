@@ -173,4 +173,4 @@ cython_debug/
 *.mp4
 
 evaluation/coco*/
-fine_tuning/prosegur_pet-person_clean-merged_*
+fine_tuning/prosegur_*/
