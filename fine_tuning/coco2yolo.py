@@ -5,5 +5,5 @@ convert_coco(
     save_dir="prosegur_pet-person_clean-merged_yolo/",
     use_segments=False,
     use_keypoints=False,
-    cls91to80=True,
+    cls91to80=False
 )
