@@ -24,8 +24,8 @@ if __name__ == "__main__":
     images_dir = Path("coco/test/images")  # folder containing input images to be processed
 
     # load model
-    weights_path = "../weights/yolov9-e-converted.pt"  # model weights
-    model = YOLOv9(weights_path, half=False)
+    weights_path = "../weights/yolov9-e-converted.engine"  # model weights
+    model = YOLOv9(weights_path, half=True)
 
     # run inference and save inference times
     time_measures = []
