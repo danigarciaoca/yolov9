@@ -15,3 +15,4 @@ dependencies:
             # Packages
             - -r requirements.txt
             - fiftyone==1.0.2
+            - ultralytics==8.3.29
