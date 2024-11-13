@@ -129,7 +129,7 @@ class YOLOv9:
                  hide_labels=False,  # hide labels
                  hide_conf=False,  # hide confidences
                  save_txt=False,  # save results to *.txt
-                 save_conf=False,  # save confidences in --save-txt labels
+                 save_conf=False,  # save confidences in txt_file labels
                  txt_file=None,  # name of the file in which to save results
                  class_map=None  # dictionary containing the mapping from COCO class IDs to destination class IDs
                  ):

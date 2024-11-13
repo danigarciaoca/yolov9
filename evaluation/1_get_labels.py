@@ -18,8 +18,8 @@ def process_image(det_model, in_img_path, out_labels_path, view_img):
 
     # annotate image with detections
     txt_out = out_labels_path / in_img_path.stem
-    img_out = model.annotate(img, det, line_width=3, annot_img=view_img,
-                             save_txt=True, txt_file=txt_out, class_map=coco2mpa)
+    img_out = model.annotate(img, det, line_width=3, annot_img=view_img, save_txt=True,
+                             save_conf=True, txt_file=txt_out, class_map=coco2mpa)
 
     if view_img:
         # show annotated image
