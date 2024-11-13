@@ -40,6 +40,22 @@ fouy.add_yolo_labels(
 )
 
 if __name__ == "__main__":
-    # launch FiftyOne with the loaded dataset
-    session = fo.launch_app(dataset)
-    session.wait()  # block execution until the script is stopped
+    # # launch FiftyOne with the loaded dataset
+    # session = fo.launch_app(dataset)
+    # session.wait()  # block execution until the script is stopped
+
+    # Performs an IoU sweep so that mAP and PR curves can be computed
+    results = dataset.evaluate_detections(
+        pred_field="predictions",
+        gt_field="ground_truth",
+        method="coco",
+        compute_mAP=True,
+    )
+
+    # print mAP and AP results
+    print(results.mAP())
+    for cls in classes:
+        ap_cls = results.mAP(classes=[cls])
+        print(f"Class '{cls}' AP@0.5: {ap_cls:.4f}")
+
+    print("Done!")
