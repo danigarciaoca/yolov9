@@ -174,3 +174,4 @@ cython_debug/
 
 evaluation/coco*/
 fine_tuning/prosegur_*/
+yolov9/src/runs*
