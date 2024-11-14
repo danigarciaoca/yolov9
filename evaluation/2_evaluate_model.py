@@ -8,7 +8,8 @@ gt_labels_path = "coco/test/instances.json"  # path to the COCO labels JSON file
 persist = False  # make the dataset persistent
 
 # predictions
-pred_labels_path = "coco_test_yolov9/labels/test"  # path to the YOLOv5-format dataset labels
+pred_labels_path = "coco_test_yolov9_coco/labels/test"  # path to the YOLOv5-format dataset predicted labels
+# pred_labels_path = "coco_test_yolov9_psg/labels/test"  # path to the YOLOv5-format dataset predicted labels
 
 fo.delete_dataset(gt_dataset_name)
 
@@ -53,9 +54,9 @@ if __name__ == "__main__":
     )
 
     # print mAP and AP results
-    print(results.mAP())
+    print(f"\nmAP: {results.mAP():.4f}")
     for cls in classes:
         ap_cls = results.mAP(classes=[cls])
-        print(f"Class '{cls}' AP@0.5: {ap_cls:.4f}")
+        print(f" - class '{cls}' AP@0.5: {ap_cls:.4f}")
 
     print("Done!")
