@@ -1,6 +1,6 @@
 # How to run?
 
-## Create the conda environment
+## Create conda environment
 
 ```bash
 git clone https://github.com/danigarciaoca/yolov9.git
@@ -10,7 +10,7 @@ conda env create -f environment.yml
 conda activate yolov9
 ```
 
-## Training
+## Train
 
 ```bash
 cd yolov9/src
@@ -18,7 +18,13 @@ cd yolov9/src
 python train_dual.py --batch 16 --epochs 25 --img 640 --device 0 --min-items 0 --close-mosaic 15 --data {dataset.location}/data.yaml --weights {weights.location}/yolov9-e.pt --cfg models/detect/yolov9-e.yaml --hyp data/hyps/hyp.scratch-high.yaml
 ```
 
-## Evaluation
+## Export
+
+```bash
+python torch2trt.py
+```
+
+## Evaluate
 
 ```bash
 cd evaluation
