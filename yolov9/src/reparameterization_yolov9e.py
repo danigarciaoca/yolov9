@@ -4,11 +4,12 @@ from models.yolo import Model
 
 INPUT_MODEL = "runs/train/exp/weights/best.pt"
 OUTPUT_MODEL = "runs/train/exp/weights/best-converted.pt"
+NUM_CLASSES = 3
 
 # convert YOLOv9-E
 device = torch.device("cpu")
 cfg = "./models/detect/gelan-e.yaml"
-model = Model(cfg, ch=3, nc=3, anchors=3)
+model = Model(cfg, ch=3, nc=NUM_CLASSES, anchors=3)
 # model = model.half()
 model = model.to(device)
 _ = model.eval()
