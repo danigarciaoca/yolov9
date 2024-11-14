@@ -9,7 +9,8 @@ persist = False  # make the dataset persistent
 
 # predictions
 # pred_labels_path = "coco_test_yolov9_coco/labels/test"  # path to the YOLOv5-format dataset predicted labels
-pred_labels_path = "coco_test_yolov9_psg/labels/test"  # path to the YOLOv5-format dataset predicted labels
+# pred_labels_path = "coco_test_yolov9_psg/labels/test"  # path to the YOLOv5-format dataset predicted labels
+pred_labels_path = "coco_test_yolov9_psg_conv/labels/test"  # path to the YOLOv5-format dataset predicted labels
 
 fo.delete_dataset(gt_dataset_name)
 
