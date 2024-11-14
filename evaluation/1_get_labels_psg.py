@@ -41,6 +41,6 @@ if __name__ == "__main__":
 
     # run inference
     for img_path in tqdm(images_dir.iterdir(), total=2279):
-        process_image(det_model=model, in_img_path=img_path, out_labels_path=labels_path, view_img=True)
+        process_image(det_model=model, in_img_path=img_path, out_labels_path=labels_path, view_img=False)
 
     print("Done!")
