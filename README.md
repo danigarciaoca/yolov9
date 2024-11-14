@@ -15,10 +15,21 @@ conda activate yolov9
 ```bash
 cd yolov9/src
 
+export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
 python train_dual.py --batch 16 --epochs 25 --img 640 --device 0 --min-items 0 --close-mosaic 15 --data {dataset.location}/data.yaml --weights {weights.location}/yolov9-e.pt --cfg models/detect/yolov9-e.yaml --hyp data/hyps/hyp.scratch-high.yaml
 ```
 
-## Export
+## Export to TensorRT
+
+1. Re-parameterize the trained model
+
+```bash
+cd yolov9/src
+
+python reparameterization_yolov9e.py
+``` 
+
+2. Convert the trained model from PyTorch (.pt) to TensorRT (.engine)
 
 ```bash
 python torch2trt.py
