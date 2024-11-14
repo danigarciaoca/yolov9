@@ -39,8 +39,8 @@ if __name__ == "__main__":
     labels_path.mkdir(parents=True, exist_ok=True)
 
     # load model
-    weights_path = "../weights/yolov9-e-converted.pt"  # model weights
-    model = YOLOv9(weights_path, half=False)
+    weights_path = "../weights/yolov9-e-converted.engine"  # model weights
+    model = YOLOv9(weights_path, half=True)
 
     # run inference
     for img_path in tqdm(images_dir.iterdir(), total=2279):
