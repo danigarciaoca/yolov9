@@ -11,11 +11,11 @@ inplace = False  # set YOLO Detect() inplace=True
 # ONNX options
 opset = 12  # ONNX: opset version
 dynamic = False  # ONNX/TF/TensorRT: dynamic axes
-simplify = False  # ONNX: simplify model
+simplify = True  # ONNX: simplify model
 
 # TensorRT options
-half = False  # FP16 half-precision export
-workspace = 4  # TensorRT: workspace size (GB)
+half = True  # FP16 half-precision export
+workspace = 10  # TensorRT: workspace size (GB)
 verbose = False  # TensorRT: verbose log
 
 # Export model
