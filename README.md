@@ -16,7 +16,7 @@ conda activate yolov9
 cd yolov9/src
 
 export PYTORCH_CUDA_ALLOC_CONF=expandable_segments:True
-python train_dual.py --batch 16 --epochs 25 --img 640 --device 0 --min-items 0 --close-mosaic 15 --data {dataset.location}/data.yaml --weights {weights.location}/yolov9-e.pt --cfg models/detect/yolov9-e.yaml --hyp data/hyps/hyp.scratch-high.yaml
+python train_dual.py --batch 16 --epochs 100 --img 640 --device 0 --min-items 0 --close-mosaic 15 --data {dataset.location}/data.yaml --weights {weights.location}/yolov9-e.pt --cfg models/detect/yolov9-e.yaml --hyp data/hyps/hyp.scratch-high.yaml
 ```
 
 ## Export to TensorRT
