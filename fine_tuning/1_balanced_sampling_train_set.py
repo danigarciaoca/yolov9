@@ -44,9 +44,6 @@ if __name__ == "__main__":
     classes = ["cat", "dog", "person"]
 
     # get those images with more than `num_people` people
-    medium = 10
-    difficult = 20
-    extreme = 30
     cat_samples = []
     dog_samples = []
     many_people_ranges = {
