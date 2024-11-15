@@ -49,7 +49,14 @@ if __name__ == "__main__":
     extreme = 30
     cat_samples = []
     dog_samples = []
-    many_people_samples = {"medium": [], "difficult": [], "extreme": []}
+    many_people_ranges = {
+        "very_easy": range(1, 6),  # 1 to 5
+        "easy": range(6, 11),  # 6 to 10
+        "medium": range(11, 16),  # 11 to 15
+        "difficult": range(16, 21),  # 16 to 20
+        "extreme": range(21, 26)  # 21 to 25
+    }
+    many_people_samples = {"very_easy": [], "easy": [], "medium": [], "difficult": [], "extreme": []}
     for annot_file in annotations_path.iterdir():
         # get labels from the annotation file of current sample
         cls_ids, labels = get_labels(annot_file, classes)
@@ -66,22 +73,42 @@ if __name__ == "__main__":
         dog_samples.append(str(annot_file)) if dog_count and not people_count else None
 
         # categorize current sample in terms of the annotated people
-        if people_count >= extreme:
-            many_people_samples["extreme"].append(str(annot_file))
-        elif people_count >= difficult:
-            many_people_samples["difficult"].append(str(annot_file))
-        elif people_count >= medium:
-            many_people_samples["medium"].append(str(annot_file))
+        for category, people_range in many_people_ranges.items():
+            if people_count in people_range:
+                many_people_samples[category].append(str(annot_file))
+                break
 
     # random sample 200 samples from each person difficulty group
-    num_samples = 100
+    many_people_num_samples = {"very_easy": 5400, "easy": 1100, "medium": 650, "difficult": 450, "extreme": 340}
     people_samples_balanced = []
-    for sub_group in many_people_samples.values():
-        people_samples_balanced.extend(random.sample(sub_group, min(num_samples, len(sub_group))))
+    many_people_samples_aux = {"very_easy": 0, "easy": 0, "medium": 0, "difficult": 0, "extreme": 0}
+    people_count_tot_aux = 0
+    for dif_level, sub_group in many_people_samples.items():
+        num_samples = many_people_num_samples[dif_level]
+        sample_aux = random.sample(sub_group, num_samples)
+        for annot_file in sample_aux:
+            # get labels from the annotation file of current sample
+            cls_ids, labels = get_labels(annot_file, classes)
+            people_count = labels.count("person")
+            # categorize current sample in terms of the annotated people
+            for category, people_range in many_people_ranges.items():
+                if people_count in people_range:
+                    many_people_samples_aux[category] += people_count
+                    people_count_tot_aux += people_count
+                    break
+
+        people_samples_balanced.extend(sample_aux)
+
+    print(f" - People samples: {len(people_samples_balanced)} ({people_count_tot_aux} annots)")
+    print(f"   - very easy: {many_people_num_samples['very_easy']} ({many_people_samples_aux['very_easy']} annots)")
+    print(f"   - easy: {many_people_num_samples['easy']} ({many_people_samples_aux['easy']} annots)")
+    print(f"   - medium: {many_people_num_samples['medium']} ({many_people_samples_aux['medium']} annots)")
+    print(f"   - difficult: {many_people_num_samples['difficult']} ({many_people_samples_aux['difficult']} annots)")
+    print(f"   - extreme: {many_people_num_samples['extreme']} ({many_people_samples_aux['extreme']} annots)")
 
     # random sample 5000 samples from each pet category
-    num_samples_cat = 2700
-    num_samples_dog = 2700
+    num_samples_cat = 14459
+    num_samples_dog = 10000
     cat_samples_balanced = []
     dog_samples_balanced = []
     cat_samples_balanced.extend(random.sample(cat_samples, min(num_samples_cat, len(cat_samples))))
@@ -99,7 +126,7 @@ if __name__ == "__main__":
         dog_cnt += labels.count("dog")
         people_cnt += labels.count("person")
 
-    print(f"People samples:\nCats: {cat_cnt} | Dogs: {dog_cnt} | People: {people_cnt}")
+    print(f"\nPeople annots:\nCats: {cat_cnt} | Dogs: {dog_cnt} | People: {people_cnt}")
     total_cat_cnt, total_dog_cnt, total_people_cnt = cat_cnt, dog_cnt, people_cnt
 
     # count the number of cats, dogs and persons in current pet samples
@@ -113,21 +140,26 @@ if __name__ == "__main__":
         dog_cnt += labels.count("dog")
         people_cnt += labels.count("person")
 
-    print(f"\nPet samples:\nCats: {cat_cnt} | Dogs: {dog_cnt} | People: {people_cnt}")
+    print(f"\nPet annots:\nCats: {cat_cnt} | Dogs: {dog_cnt} | People: {people_cnt}")
     total_cat_cnt += cat_cnt
     total_dog_cnt += dog_cnt
     total_people_cnt += people_cnt
 
     # final summary
-    print(f"\nTotal samples:\nCats: {total_cat_cnt} | Dogs: {total_dog_cnt} | People: {total_people_cnt}")
+    print(f"\nTotal annots:\nCats: {total_cat_cnt} | Dogs: {total_dog_cnt} | People: {total_people_cnt}")
 
     # create dataset
-    output_dataset = Path("prosegur_person_pet_balanced")
+    output_dataset = Path("prosegur_person_pet_balanced_2")
     images_path, labels_path = (output_dataset / "images" / split), (output_dataset / "labels" / split)
     images_path.mkdir(parents=True, exist_ok=True)
     labels_path.mkdir(parents=True, exist_ok=True)
     orig_images_path = Path("/home/danigarciaoca/Imágenes/prosegur_pet-person_clean-merged_coco") / split / "images"
     total_samples = set(cat_samples_balanced + dog_samples_balanced + people_samples_balanced)
+
+    print(f"\nTotal samples: {len(cat_samples_balanced) + len(dog_samples_balanced) + len(people_samples_balanced)}")
+    print(f"Total unique samples: {len(total_samples)}")
+
+    print("\nCreating dataset...")
     for annot_file in total_samples:
         # copy image
         basename = annot_file.split("/")[-1].split(".")[0]
