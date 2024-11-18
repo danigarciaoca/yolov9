@@ -175,4 +175,5 @@ cython_debug/
 evaluation/coco*/
 evaluation/applause_*/
 fine_tuning/prosegur_*/
+fine_tuning/applause_*/
 yolov9/src/runs*
