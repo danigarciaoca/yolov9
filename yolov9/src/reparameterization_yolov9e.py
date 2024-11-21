@@ -4,7 +4,7 @@ from models.yolo import Model
 
 INPUT_MODEL = "runs/train/exp/weights/best.pt"
 OUTPUT_MODEL = "runs/train/exp/weights/best-converted.pt"
-NUM_CLASSES = 3
+NUM_CLASSES = 2
 
 # convert YOLOv9-E
 device = torch.device("cpu")
