@@ -1,4 +1,4 @@
-name: yolov9
+name: yolov9_PR
 channels:
     - pytorch
     - nvidia
@@ -6,14 +6,11 @@ channels:
 dependencies:
     - python=3.10
     - pip==24.3.1
-    - pytorch==2.4.1
-    - torchvision==0.19.1
-    - pytorch-cuda=12.4
+    - pytorch==2.3.1
+    - torchvision==0.18.1
+    - pytorch-cuda=12.1
     -   pip:
             # Index URLs
             - --extra-index-url https://pypi.ngc.nvidia.com
             # Packages
             - -r requirements.txt
-            - fiftyone==1.0.2
-            - ultralytics==8.3.29
-            - Pillow==9.5.0

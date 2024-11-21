@@ -4,7 +4,7 @@ ipython
 matplotlib>=3.2.2
 numpy>=1.18.5
 opencv-python>=4.1.1
-Pillow>=7.1.2
+Pillow==9.5.0
 psutil
 PyYAML>=5.3.1
 requests>=2.23.0
@@ -24,6 +24,10 @@ onnx==1.17.0
 onnxruntime-gpu==1.20.0
 onnx-simplifier==0.4.36
 nvidia-tensorrt==8.4.3.1
+
+# Evaluation ------------------------------------------------------------------
+fiftyone==1.0.2
+ultralytics==8.3.29
 
 # Extras ----------------------------------------------------------------------
 albumentations>=1.0.3
