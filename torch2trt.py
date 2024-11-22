@@ -9,13 +9,13 @@ include = ["engine"]  # include formats
 inplace = False  # set YOLO Detect() inplace=True
 
 # ONNX options
-opset = 12  # ONNX: opset version
+opset = 16  # ONNX: opset version
 dynamic = False  # ONNX/TF/TensorRT: dynamic axes
 simplify = True  # ONNX: simplify model
 
 # TensorRT options
 half = True  # FP16 half-precision export
-workspace = 10  # TensorRT: workspace size (GB)
+workspace = 16  # TensorRT: workspace size (GB)
 verbose = False  # TensorRT: verbose log
 
 # Export model
