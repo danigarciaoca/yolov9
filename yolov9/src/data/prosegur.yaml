@@ -1,0 +1,8 @@
+path: ../datasets/applause_dataset_pet  # dataset root dir
+train: images/train  # train images (relative to 'path') 8609 images
+val: images/val  # val images (relative to 'path') 1085 images
+test: images/test  # test images (relative to 'path') 2177 images
+
+names:
+    0: pet
+    1: person
